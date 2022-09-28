@@ -31,6 +31,8 @@
 module cv32e40p_core
   import cv32e40p_apu_core_pkg::*;
 #(
+    parameter MAX_BB_LEN = 20,
+    parameter MAX_INSTR_EXE_CYCLES = 35,
     parameter PULP_XPULP          =  0,                   // PULP ISA Extension (incl. custom CSRs and hardware loop, excl. p.elw)
     parameter PULP_CLUSTER = 0,  // PULP Cluster interface (incl. p.elw)
     parameter FPU = 0,  // Floating Point Unit (interfaced via APU interface)
@@ -124,6 +126,8 @@ module cv32e40p_core
   localparam N_HWLP_BITS = $clog2(N_HWLP);
   localparam APU = (FPU == 1) ? 1 : 0;
 
+  // Insert discontinuity
+  logic [31:0] instr_rdata_insert_disc;
 
   // IF/ID signals
   logic        instr_valid_id;
@@ -412,6 +416,47 @@ module cv32e40p_core
   );
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//   ___  _   _  ____   _____  ____  _____     __  __     _     ____   _  __ _____  ____   ____   //
+//  |_ _|| \ | |/ ___| | ____||  _ \|_   _|   |  \/  |   / \   |  _ \ | |/ /| ____||  _ \ / ___|  //
+//   | | |  \| |\___ \ |  _|  | |_) | | |     | |\/| |  / _ \  | |_) || ' / |  _|  | |_) |\___ \  //
+//   | | | |\  | ___) || |___ |  _ <  | |     | |  | | / ___ \ |  _ < | . \ | |___ |  _ <  ___) | //
+//  |___||_| \_||____/ |_____||_| \_\ |_|_____|_|  |_|/_/   \_\|_| \_\|_|\_\|_____||_| \_\|____/  //
+//                                      |_____|                                                   //
+//                                                                                                //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  cv32e40p_insert_security_markers #(
+    .MAX_BB_LEN(MAX_BB_LEN-1) // 1 cycle is need to pass from fetch to decode
+  ) insert_security_markers_i (
+    .clk      (clk),
+    .rst_n    (rst_ni),
+    .instr_o  (instr_rdata_insert_disc),
+    .instr_i  (instr_rdata_i)
+  );
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  //  _     ____  __  __       ____  _____ _____ _____  ____ _____  ___  ____   //
+  // | |   |  _ \|  \/  |     |  _ \| ____|_   _| ____|/ ___|_   _|/ _ \|  _ \  //
+  // | |   | | | | |\/| |     | | | |  _|   | | |  _| | |     | | | | | | |_) | //
+  // | |___| |_| | |  | |     | |_| | |___  | | | |___| |___  | | | |_| |  _ <  //
+  // |_____|____/|_|  |_|_____|____/|_____| |_| |_____|\____| |_|  \___/|_| \_\ //
+  //                    |_____|                                                 //
+  //                                                                            //
+  ////////////////////////////////////////////////////////////////////////////////
+
+  cv32e40p_ldm_detector #(
+  	.MAX_BB_LEN(MAX_BB_LEN),
+	.MAX_INSTR_EXE_CYCLES(MAX_INSTR_EXE_CYCLES) // instruction maximum cycles execution = 35
+  ) ldm_detector_i (
+	.clk(clk),
+	.rst_n(rst_ni),
+	.instr_rdata_id_i(instr_rdata_id),
+	.decrement_i(instr_req_o)
+  );
+ 
+
   //////////////////////////////////////////////////
   //   ___ _____   ____ _____  _    ____ _____    //
   //  |_ _|  ___| / ___|_   _|/ \  / ___| ____|   //
@@ -449,7 +494,7 @@ module cv32e40p_core
       .instr_addr_o   (instr_addr_pmp),
       .instr_gnt_i    (instr_gnt_pmp),
       .instr_rvalid_i (instr_rvalid_i),
-      .instr_rdata_i  (instr_rdata_i),
+      .instr_rdata_i  (instr_rdata_insert_disc),
       .instr_err_i    (1'b0),  // Bus error (not used yet)
       .instr_err_pmp_i(instr_err_pmp),  // PMP error
 
