@@ -1,4 +1,4 @@
-module cv32e40p_lcm_detector #(
+module cv32e40p_lce_detector #(
 	parameter MAX_BB_LEN
 ) (
 	input clk,
