@@ -445,7 +445,7 @@ module cv32e40p_core
   //////////////////////////////////////////////////////////////////////////////
 
   cv32e40p_lce_detector #(
-  	.MAX_BB_LEN(MAX_BB_LEN),
+  	.MAX_BB_LEN(MAX_BB_LEN)
   ) lce_detector_i (
 	.clk(clk),
 	.rst_n(rst_ni),
