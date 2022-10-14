@@ -9,11 +9,11 @@ module cv32e40p_insert_discontinuity #(
 localparam MAX_BB_LEN_WIDTH = $clog2(MAX_BB_LEN+1);	
 reg[MAX_BB_LEN_WIDTH-1 :0] reg_counter = MAX_BB_LEN-2;
 
-logic           is_disc_instr = '0;
-
+logic  is_disc_instr = '0;
 
 assign instr_o = (reg_counter == '0 && instr_i != '0) ? 32'h000006f : instr_i;
 
+// COUNTER
 always_ff @ (posedge clk, negedge rst_n) begin
 	if (~rst_n) begin
 		reg_counter <= MAX_BB_LEN-2;
@@ -30,6 +30,8 @@ always_ff @ (posedge clk, negedge rst_n) begin
 	end
 end
 
+
+// IS A DISCONTUINITY INSTRUCTION
 always_comb begin
 unique case (instr_i[1:0])
   // C1
