@@ -32,7 +32,6 @@ module cv32e40p_core
   import cv32e40p_apu_core_pkg::*;
 #(
     parameter MAX_BB_LEN = 20,
-    parameter MAX_INSTR_EXE_CYCLES = 35,
     parameter PULP_XPULP          =  0,                   // PULP ISA Extension (incl. custom CSRs and hardware loop, excl. p.elw)
     parameter PULP_CLUSTER = 0,  // PULP Cluster interface (incl. p.elw)
     parameter FPU = 0,  // Floating Point Unit (interfaced via APU interface)
@@ -436,20 +435,18 @@ module cv32e40p_core
   );
 
 
-  ////////////////////////////////////////////////////////////////////////////////
-  //  _     ____  __  __       ____  _____ _____ _____  ____ _____  ___  ____   //
-  // | |   |  _ \|  \/  |     |  _ \| ____|_   _| ____|/ ___|_   _|/ _ \|  _ \  //
-  // | |   | | | | |\/| |     | | | |  _|   | | |  _| | |     | | | | | | |_) | //
-  // | |___| |_| | |  | |     | |_| | |___  | | | |___| |___  | | | |_| |  _ <  //
-  // |_____|____/|_|  |_|_____|____/|_____| |_| |_____|\____| |_|  \___/|_| \_\ //
-  //                    |_____|                                                 //
-  //                                                                            //
-  ////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
+  //  _      ____ _____       ____  _____ _____ _____  ____ _____  ___  ____   //
+  // | |    / ___| ____|     |  _ \| ____|_   _| ____|/ ___|_   _|/ _ \|  _ \  // 
+  // | |   | |   |  _|       | | | |  _|   | | |  _| | |     | | | | | | |_) | //
+  // | |___| |___| |___      | |_| | |___  | | | |___| |___  | | | |_| |  _ <  //
+  // |_____|\____|_____|_____|____/|_____| |_| |_____|\____| |_|  \___/|_| \_\ //
+  //                   |_____|                                                 //
+  //////////////////////////////////////////////////////////////////////////////
 
-  cv32e40p_ldm_detector #(
+  cv32e40p_lce_detector #(
   	.MAX_BB_LEN(MAX_BB_LEN),
-	.MAX_INSTR_EXE_CYCLES(MAX_INSTR_EXE_CYCLES) // instruction maximum cycles execution = 35
-  ) ldm_detector_i (
+  ) lce_detector_i (
 	.clk(clk),
 	.rst_n(rst_ni),
 	.instr_rdata_id_i(instr_rdata_id),

@@ -11,15 +11,15 @@ reg[MAX_BB_LEN_WIDTH-1 :0] reg_counter = MAX_BB_LEN-2;
 
 logic is_disc_instr = '0;
 
-logic is_disc_instr_and_counter_near_zero;
-
 // If counter is at 1 or 2 when there is a BRANCH, the
     // security marker added in 1 or 2 instructions will be drop by the pipeline
-    // in case of BRANCH taken. Without initialize the ldm_detector counter.
+    // in case of BRANCH taken. Without initialize the lce_detector counter.
+logic is_disc_instr_and_counter_near_zero;
 assign is_disc_instr_and_counter_near_zero = ((reg_counter == 1 || reg_counter == 2) && is_disc_instr) ? 1 : 0;
 
 assign instr_o = ((reg_counter == '0 && instr_i != '0)|| is_disc_instr_and_counter_near_zero ) ? 32'h000006f : instr_i;
 
+// COUNTER
 always_ff @ (posedge clk, negedge rst_n) begin
 	if (~rst_n) begin
 		reg_counter <= MAX_BB_LEN-2;
@@ -34,6 +34,7 @@ always_ff @ (posedge clk, negedge rst_n) begin
 	end
 end
 
+// IS A DISCONTINUITY INSTRUCTION ?
 always_comb begin                                                                  
     unique case (instr_i[6:2])                                                     
       // Branch                                                                    
