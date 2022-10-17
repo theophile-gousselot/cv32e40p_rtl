@@ -31,6 +31,7 @@
 module cv32e40p_core
   import cv32e40p_apu_core_pkg::*;
 #(
+    parameter WWDL = 20,
     parameter PULP_XPULP          =  0,                   // PULP ISA Extension (incl. custom CSRs and hardware loop, excl. p.elw)
     parameter PULP_CLUSTER = 0,  // PULP Cluster interface (incl. p.elw)
     parameter FPU = 0,  // Floating Point Unit (interfaced via APU interface)
@@ -411,6 +412,23 @@ module cv32e40p_core
       .wake_from_sleep_i(wake_from_sleep)
   );
 
+
+  ///////////////////////////////////////////////////////////////////////////////
+  //  _      ____ _____       ____  _____ _____ _____  ____ _____  ___  ____   //
+  // | |    / ___| ____|     |  _ \| ____|_   _| ____|/ ___|_   _|/ _ \|  _ \  // 
+  // | |   | |   |  _|       | | | |  _|   | | |  _| | |     | | | | | | |_) | //
+  // | |___| |___| |___      | |_| | |___  | | | |___| |___  | | | |_| |  _ <  //
+  // |_____|\____|_____|_____|____/|_____| |_| |_____|\____| |_|  \___/|_| \_\ //
+  //                   |_____|                                                 //
+  //////////////////////////////////////////////////////////////////////////////
+
+  cv32e40p_lce_detector #(
+      .WWDL(WWDL)
+  ) lce_detector_i (
+      .clk(clk),
+	  .rst_n(rst_ni),
+	  .pc_i(instr_addr_o)
+  );
 
   //////////////////////////////////////////////////
   //   ___ _____   ____ _____  _    ____ _____    //
