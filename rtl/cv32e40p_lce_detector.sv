@@ -1,5 +1,5 @@
 module cv32e40p_lce_detector #(
-	parameter MAX_BB_LEN
+	parameter WWDL
 ) (
 	input clk,
 	input rst_n,
@@ -7,18 +7,18 @@ module cv32e40p_lce_detector #(
 	input decrement_i,
 	output alarm_o
 );
-localparam MAX_BB_LEN_WITDH = $clog2(MAX_BB_LEN+1);	
+localparam WWDL_WITDH = $clog2(WWDL+1);	
 
-reg[MAX_BB_LEN_WITDH-1 :0] reg_counter = MAX_BB_LEN;
+reg[WWDL_WITDH-1 :0] reg_counter = WWDL;
 
 assign alarm_o = reg_counter=='0 ? '1 : '0;
 
 always_ff @ (posedge clk, negedge rst_n) begin
 	if (~rst_n) begin
-		reg_counter <= MAX_BB_LEN;
+		reg_counter <= WWDL;
 	end else begin
 		if (init_i) begin
-			reg_counter <= MAX_BB_LEN;
+			reg_counter <= WWDL;
 		end else begin
 			if (decrement_i) begin
 				if (reg_counter!='0) begin

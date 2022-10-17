@@ -31,7 +31,7 @@
 module cv32e40p_core
   import cv32e40p_apu_core_pkg::*;
 #(
-    parameter MAX_BB_LEN = 20,
+    parameter WWDL = 20,
     parameter PULP_XPULP          =  0,                   // PULP ISA Extension (incl. custom CSRs and hardware loop, excl. p.elw)
     parameter PULP_CLUSTER = 0,  // PULP Cluster interface (incl. p.elw)
     parameter FPU = 0,  // Floating Point Unit (interfaced via APU interface)
@@ -430,7 +430,7 @@ module cv32e40p_core
     // counter will be initialize by second and third branch. These branchs
     // will drop by the pipeline and will no initialize the
     // lce_detector_counter.
-    .MAX_BB_LEN(MAX_BB_LEN-4)
+    .WWDL(WWDL-4)
   ) insert_discontinuity_i (
     .clk      (clk),
     .rst_n    (rst_ni),
@@ -451,7 +451,7 @@ module cv32e40p_core
   ///////////////////////////////////////////////////////////////////////////////
 
   cv32e40p_lce_detector #(
-  	.MAX_BB_LEN(MAX_BB_LEN)
+  	.WWDL(WWDL)
   ) lce_detector_i (
 	.clk(clk),
 	.rst_n(rst_ni),

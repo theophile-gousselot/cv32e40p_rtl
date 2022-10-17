@@ -1,13 +1,13 @@
 module cv32e40p_insert_discontinuity #(
-	parameter MAX_BB_LEN
+	parameter WWDL
 ) (
 	input clk,
 	input rst_n,
 	input [31:0] instr_i,
 	output [31:0] instr_o
 );
-localparam MAX_BB_LEN_WIDTH = $clog2(MAX_BB_LEN+1);	
-reg[MAX_BB_LEN_WIDTH-1 :0] reg_counter = MAX_BB_LEN-2;
+localparam WWDL_WIDTH = $clog2(WWDL+1);	
+reg[WWDL_WIDTH-1 :0] reg_counter = WWDL-2;
 
 logic  is_disc_instr = '0;
 
@@ -16,13 +16,13 @@ assign instr_o = (reg_counter == '0 && instr_i != '0) ? 32'h000006f : instr_i;
 // COUNTER
 always_ff @ (posedge clk, negedge rst_n) begin
 	if (~rst_n) begin
-		reg_counter <= MAX_BB_LEN-2;
+		reg_counter <= WWDL-2;
 	end else begin
         if (instr_i != '0) begin
             if (reg_counter == '0) begin
-                reg_counter <= MAX_BB_LEN;
+                reg_counter <= WWDL;
             end else if (is_disc_instr) begin
-                reg_counter <= MAX_BB_LEN;
+                reg_counter <= WWDL;
             end else begin
                 reg_counter <= reg_counter - 1;
             end
