@@ -423,7 +423,8 @@ module cv32e40p_core
   //////////////////////////////////////////////////////////////////////////////
 
   cv32e40p_lce_detector #(
-      .WWDL(WWDL)
+  // WWDL-1 to ensure to detect before the execution of instruction number WWDL
+      .WWDL(WWDL-1)
   ) lce_detector_i (
       .clk(clk),
 	  .rst_n(rst_ni),
