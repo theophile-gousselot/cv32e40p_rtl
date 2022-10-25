@@ -126,7 +126,7 @@ module cv32e40p_core
   localparam APU = (FPU == 1) ? 1 : 0;
 
   // Insert discontinuity
-  logic [31:0] instr_rdata_insert_disc;
+  logic [31:0] instr_rdata_security_markers;
 
   // IF/ID signals
   logic        instr_valid_id;
@@ -430,7 +430,7 @@ module cv32e40p_core
   ) insert_security_markers_i (
     .clk      (clk),
     .rst_n    (rst_ni),
-    .instr_o  (instr_rdata_insert_disc),
+    .instr_o  (instr_rdata_security_markers),
     .instr_i  (instr_rdata_i)
   );
 
@@ -491,7 +491,7 @@ module cv32e40p_core
       .instr_addr_o   (instr_addr_pmp),
       .instr_gnt_i    (instr_gnt_pmp),
       .instr_rvalid_i (instr_rvalid_i),
-      .instr_rdata_i  (instr_rdata_insert_disc),
+      .instr_rdata_i  (instr_rdata_security_markers),
       .instr_err_i    (1'b0),  // Bus error (not used yet)
       .instr_err_pmp_i(instr_err_pmp),  // PMP error
 
