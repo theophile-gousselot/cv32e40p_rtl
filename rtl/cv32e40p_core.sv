@@ -125,8 +125,8 @@ module cv32e40p_core
   localparam N_HWLP_BITS = $clog2(N_HWLP);
   localparam APU = (FPU == 1) ? 1 : 0;
 
-  // Insert discontinuity
-  logic [31:0] instr_rdata_insert_disc;
+  // Insert security markers
+  logic [31:0] instr_rdata_security_markers;
 
   // IF/ID signals
   logic        instr_valid_id;
@@ -415,29 +415,28 @@ module cv32e40p_core
   );
 
 
-//////////////////////////////////////////////////////////////////////////////////
-//  ___  _   _  ____   _____  ____   _____         ____   ___  ____    ____     //
-// |_ _|| \ | |/ ___| | ____||  _ \ |_   _|       |  _ \ |_ _|/ ___|  / ___|    //
-//  | | |  \| |\___ \ |  _|  | |_) |  | |         | | | | | | \___ \ | |        //
-//  | | | |\  | ___) || |___ |  _ <   | |         | |_| | | |  ___) || |___  _  //
-// |___||_| \_||____/ |_____||_| \_\  |_|   _____ |____/ |___||____/  \____|(_) //
-//                                         |_____|                              //
-//                                                                              //
-//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//   ___  _   _  ____   _____  ____  _____     __  __     _     ____   _  __ _____  ____   ____   //
+//  |_ _|| \ | |/ ___| | ____||  _ \|_   _|   |  \/  |   / \   |  _ \ | |/ /| ____||  _ \ / ___|  //
+//   | | |  \| |\___ \ |  _|  | |_) | | |     | |\/| |  / _ \  | |_) || ' / |  _|  | |_) |\___ \  //
+//   | | | |\  | ___) || |___ |  _ <  | |     | |  | | / ___ \ |  _ < | . \ | |___ |  _ <  ___) | //
+//  |___||_| \_||____/ |_____||_| \_\ |_|_____|_|  |_|/_/   \_\|_| \_\|_|\_\|_____||_| \_\|____/  //
+//                                      |_____|                                                   //
+//                                                                                                //
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  cv32e40p_insert_discontinuity #(
-    // In case of sucessive branchs when first branch is taken, insert_disc 
+  cv32e40p_insert_security_markers #(
+    // In case of sucessive branchs when first branch is taken, insert SM 
     // counter will be initialize by second and third branch. These branchs
     // will drop by the pipeline and will no initialize the
     // lce_detector_counter.
     .WWDL(WWDL-4)
-  ) insert_discontinuity_i (
+  ) insert_security_markers_i (
     .clk      (clk),
     .rst_n    (rst_ni),
-    .instr_o  (instr_rdata_insert_disc),
+    .instr_o  (instr_rdata_security_markers),
     .instr_i  (instr_rdata_i)
   );
-
 
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -497,7 +496,7 @@ module cv32e40p_core
       .instr_addr_o   (instr_addr_pmp),
       .instr_gnt_i    (instr_gnt_pmp),
       .instr_rvalid_i (instr_rvalid_i),
-      .instr_rdata_i  (instr_rdata_insert_disc),
+      .instr_rdata_i  (instr_rdata_security_markers),
       .instr_err_i    (1'b0),  // Bus error (not used yet)
       .instr_err_pmp_i(instr_err_pmp),  // PMP error
 

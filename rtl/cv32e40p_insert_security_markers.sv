@@ -1,4 +1,4 @@
-module cv32e40p_insert_discontinuity #(
+module cv32e40p_insert_security_markers #(
 	parameter WWDL
 ) (
 	input clk,
