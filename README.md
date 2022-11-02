@@ -1,13 +1,4 @@
-<style>
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
-
-# Unprotected OpenHW Group CORE-V CV32E40P RISC-V IP
+# Protected OpenHW Group CORE-V CV32E40P IP
 
 [CV32E40P](https://github.com/openhwgroup/cv32e40p/) is a small and efficient, 32-bit, in-order RISC-V core with a 4-stage pipeline that implements
 the RV32IM\[F\]C instruction set architecture. It started its life as a fork of the OR10N CPU core that is based on the OpenRISC ISA. Then, under the name of RI5CY, it became a RISC-V core (2016), and it has been maintained
@@ -25,10 +16,12 @@ Four branches are available :
 
 ## Countermeasure implementation
 
-Each hardware block are described in one file :
+Each hardware block is described in one file :
 - **rtl/cv32e40p_insert_security_markers.sv**
 - **rtl/cv32e40p_lce_detector.sv**
 
 There are located according to the following diagram.
-<img src="docs/images/diagram_countermeasures_places.jpg" alt="drawing" width="700" class="center"/>
+<p align="center">
+    <img src="docs/images/diagram_countermeasures_places.jpg" alt="drawing" width="700" class="center"/>
+</p>
 
