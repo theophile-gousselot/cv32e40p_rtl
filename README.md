@@ -1,12 +1,3 @@
-<style>
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
-
 # Unprotected OpenHW Group CORE-V CV32E40P RISC-V IP
 
 [CV32E40P](https://github.com/openhwgroup/cv32e40p/) is a small and efficient, 32-bit, in-order RISC-V core with a 4-stage pipeline that implements
@@ -30,5 +21,7 @@ Each hardware block are described in one file :
 - **rtl/cv32e40p_lce_detector.sv**
 
 There are located according to the following diagram.
-<img src="docs/images/diagram_countermeasures_places.jpg" alt="drawing" width="700" class="center"/>
+<p align="center">
+    <img src="docs/images/diagram_countermeasures_places.jpg" alt="drawing" width="700" class="center"/>
+</p>
 
